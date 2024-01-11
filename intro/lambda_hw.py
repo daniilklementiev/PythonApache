@@ -11,9 +11,9 @@ def strategy(data, lambdas):
 
 def main() -> None:
     lambdas = [
-        lambda input: sum(input) / len(input), # arithmetic mean
+        lambda input: sum(input) / len(input),                # arithmetic mean
         lambda input: len(input) / sum(1 / i for i in input), # harmonic mean
-        lambda input: 1 / len(input) * sum(i for i in input) # geometric mean
+        lambda input: 1 / len(input) * sum(i for i in input)  # geometric mean
     ]
     result = strategy(data, lambdas)
     print(result)

@@ -20,7 +20,7 @@ def main() -> None:
     y = 20
     init_lam1()
     init_lam2()
-    w=20
+    w = 20
     lam1("Hello")
     lam2("Hello")
 

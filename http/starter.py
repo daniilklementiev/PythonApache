@@ -1,5 +1,6 @@
 # Alternative resolve for the server application
 import inspect
+import pickle
 import appsetting
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import os
@@ -13,6 +14,20 @@ sys.path.append(appsetting.CONTROLLERS_PATH)
 class MainHandler(BaseHTTPRequestHandler):
     sessions = dict() 
 
+    def save_session(self) -> None:
+        with open('sessions.pkl', 'wb') as file:
+            print('save_session')
+            pickle.dump(self.sessions, file)
+
+    def load_sessions(self) -> None:
+        try:
+            with open('sessions.pkl', 'rb') as file:
+                self.sessions = pickle.load(file)
+                print(self.sessions)
+                print('load_sessions')
+        except FileNotFoundError:
+            self.sessions = dict()
+
     def do_GET(self) -> None:
         url_parts = self.path.split('?')
         if len(url_parts) > 2:
@@ -25,7 +40,7 @@ class MainHandler(BaseHTTPRequestHandler):
             return
         
         self.response_headers = dict()
-        print(self.headers['Cookie'])
+        # print(self.headers['Cookie'])
         self.cookies = dict( (cookie.split('=') for cookie in self.headers['Cookie'].split('; '))) if 'Cookie' in self.headers else {}
         
         # sessions processing
@@ -37,7 +52,7 @@ class MainHandler(BaseHTTPRequestHandler):
             }
             self.response_headers['Set-Cookie'] = f'session-id={session_id}'
         self.session = MainHandler.sessions[session_id]
-        print (self.session)    
+        # print (self.session)    
 
         path_parts = path.split('/')
         controller_name = (path_parts[1].capitalize() if  path_parts[1] != '' else 'Home' ) + 'Controller'
@@ -49,6 +64,7 @@ class MainHandler(BaseHTTPRequestHandler):
             controller_class = getattr(controller_module, controller_name)
             controller_object = controller_class(handler=self)
             controller_action = getattr(controller_object, action_name)
+            print(f'controller_name: {controller_name}, action_name: {action_name}')
         except Exception as e:
             controller_action = None
             print(e)
@@ -120,11 +136,14 @@ class MainHandler(BaseHTTPRequestHandler):
 
 
 def main():
+    MainHandler.load_sessions(self=MainHandler)
+
     server = HTTPServer(('127.0.0.1', 82), MainHandler)
     try:
         print("Server started")
         server.serve_forever()
     except :
+        MainHandler.save_session(self=MainHandler)
         print("Server stopped")
 
 

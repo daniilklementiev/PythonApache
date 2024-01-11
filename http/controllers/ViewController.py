@@ -28,7 +28,7 @@ class ViewController:
         view_name = f"{appsetting.VIEWS_PATH}/{controller_name}/{action_name}.html"
 
         if not os.path.isfile( layout_name ) or not os.path.isfile( view_name ) :
-            print( 'return_view:: file(s) not found: ', view_name )
+            # print( 'return_view:: file(s) not found: ', view_name )
             self.send_404()
             return
         

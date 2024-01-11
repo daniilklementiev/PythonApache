@@ -34,5 +34,5 @@ class CartController (ViewController):
             self.view_data['@summary'] = total_price
             self.view_data['@display_for_cart'] = ''.join(cart_item_views)
 
-        print(list(cart_items))
+        # print(list(cart_items))
         self.return_view()

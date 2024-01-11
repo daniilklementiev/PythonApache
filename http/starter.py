@@ -19,7 +19,6 @@ class MainHandler(BaseHTTPRequestHandler):
             self.send_404()
             return
         path = url_parts[0]
-        # query_string = url_parts[1] if len(url_parts) > 0 else None
         filename = f'{appsetting.WWWROOT_PATH}/{path}'
         if os.path.isfile(filename):
             self.flush_file(filename)

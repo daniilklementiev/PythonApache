@@ -28,17 +28,31 @@ function authButtonClick() {
 
 function infoButtonClick() {
     const userToken = document.getElementById('user-token').value;
-    if (!userToken) {
-        throw "Element with id 'user-token' not found"
-    }
-
+    
     fetch(`/auth`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${userToken}`,
             'My-Header': 'My-Value'
         }
-    }).then(r=>r.json()).then(r=>console.log(r));
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Authentication failed");
+        }
+
+        return response.json();
+    })
+    .then(data => {
+        // Успішна автентифікація
+        document.getElementById('user-token').value = data;
+        console.log("Authentication successful");
+    })
+    .catch(error => {
+        // Помилка під час автентифікації
+        document.getElementById('user-token').value = "";
+        console.error(`Authentication error: ${error.message}`);
+    });
 }
 
 function productButtonClick() {

@@ -48,19 +48,30 @@ class Products:
 
 
 class Cart :       
-    def add( cart_item: dict) :
+    def add(self, cart_item: dict) :
         try:
             db = connect_db()
-            sql = "INSERT INTO carts (id_user, id_product, cnt) VALUES (%(id_user)s, %(id_product)s, %(cnt)s)"
+            sql = "SELECT * FROM carts WHERE id_product=%s"
             with db.cursor() as cursor :
-                cursor.execute(sql, cart_item)
+                cursor.execute( sql, (str(cart_item['id_product']),) )
+                row = cursor.fetchall()
+            cart_item_from_db = dict( zip( cursor.column_names, map( str, row[0] ) ) ) if len(row) > 0 else None
+            if cart_item_from_db != None:
+                cart_item['cnt'] += 1
+                sql = "UPDATE carts SET cnt=%s WHERE id_product=%s"
+                with db.cursor() as cursor :
+                    cursor.execute( sql, (cart_item['cnt'], cart_item['id_product'],) )
+            else:
+                sql = "INSERT INTO carts (`id_user`, `id_product`, `cnt`) VALUES ( %(id_user)s, %(id_product)s, %(cnt)s )"
+                with db.cursor() as cursor :
+                    cursor.execute( sql, cart_item )
             db.commit()
         except mysql.connector.Error as err :
-            logging.error('SQL error', {'sql': sql, 'err': err})
-            raise RuntimeError( str(err) )
-        except Exception as err :
-            logging.error('Unknown error', {'err': err})
-            raise RuntimeError( str(err) )
+            logging.error(str(err), {'sql': sql, 'err': err})
+            raise RuntimeError(err)
+        except Exception as err:
+            logging.error(str(err), { 'err': str(err)})
+            raise RuntimeError(err)
     
     def get_items( id_user: str ) -> list:
         ret = []

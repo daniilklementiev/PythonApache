@@ -1,4 +1,0 @@
-[2023-12-25 17:41:05] - [ERROR] in [dao.py::82] : Unknown error with {'err': RuntimeError('Invalid token')}
-[2023-12-25 17:45:07] - [ERROR] in [dao.py::62] : Unknown error with {'err': NameError("name 'product' is not defined")}
-[2023-12-25 17:45:22] - [ERROR] in [dao.py::62] : Unknown error with {'err': NameError("name 'product' is not defined")}
-[2023-12-25 17:45:47] - [ERROR] in [dao.py::59] : SQL error with {'sql': 'INSERT INTO carts (id_user, id_product, cnt) VALUES (%(naid_userme)s, %(id_product)s, %(cnt)s)', 'err': ProgrammingError(1064, "1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '%(naid_userme)s, '100631952654073856', 1)' at line 1", '42000')}

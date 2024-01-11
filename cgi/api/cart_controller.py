@@ -27,7 +27,7 @@ class CartController(api_controller.ApiController):
              )
         try :
             cart_item = { 'id_product' : body['id_product'], 'id_user' : user_id, 'cnt' : 1 }
-            dao.Cart.add(cart_item)
+            dao.Cart.add(dao.Cart(), cart_item)
         except :
             self.send_response(
                 meta={ "service": self.service_name, "count": 0, "status": 500 },
